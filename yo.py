@@ -22,9 +22,6 @@ default_args = {
 )
 def yo_dag():
     
-    import logging
-    log = logging.getLogger('airflow.task')
-    
     @task
     def yo(**kwargs):
 	    import logging
