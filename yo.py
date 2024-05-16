@@ -27,9 +27,16 @@ def yo_dag():
         import logging
         log = logging.getLogger('airflow.task')
         log.info('Yo!')
-        
+     
+    @task
+    def no():
+        import logging
+        log = logging.getLogger('airflow.task')
+        log.info('No(') 
+       
     (
         yo()
+        >> no()
     )
     
 yo_dag = yo_dag()
