@@ -2,6 +2,7 @@ from datetime import timedelta
 import pendulum
 
 from airflow.decorators import dag, task
+from airflow.decorators.task_group import task_group
 
 default_args = {
     "owner": "nifiservice",
@@ -22,19 +23,24 @@ default_args = {
 )
 def yo_dag():
     
-    @task
-    def yo():
-        return 'Yo!'
+    @task_group
+    def group()
+    
+        @task
+        def yo():
+            return 'Yo!'
 
-    @task
-    def what(phrase):
-        import logging
-        log = logging.getLogger('airflow.task')
-        log.info(phrase)
+        @task
+        def what(phrase):
+            import logging
+            log = logging.getLogger('airflow.task')
+            log.info(phrase)
 
+        phrase = yo()
+        what(phrase=phrase)
        
     (
-        what(phrase=yo())
+        group()
     )
     
 yo_dag = yo_dag()
