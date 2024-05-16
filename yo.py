@@ -2,13 +2,15 @@ from datetime import timedelta
 import pendulum
 
 from airflow.decorators import dag, task
-from airflow.decorators.task_group import task_group
 
 default_args = {
     "owner": "nifiservice",
     "depends_on_past": False,
     "retries": 0,
     "retry_delay": timedelta(seconds=5),
+    "params": {
+        "amount": 20
+    }
 }
 
 @dag(
@@ -23,24 +25,31 @@ default_args = {
 )
 def yo_dag():
     
-    @task_group
-    def group():
+    @task
+    def get_restaurants(**kwargs):
+        amount = kwargs["params"]["amount"]
+        return [n for n in range(amount)]
     
-        @task
-        def yo():
-            return 'Yo!'
-
-        @task
-        def what(phrase):
-            import logging
-            log = logging.getLogger('airflow.task')
-            log.info(phrase)
-
-        phrase = yo()
-        what(phrase=phrase)
-       
+    @task
+    def connect(number):
+        import logging
+        log = logging.getLogger('airflow.task')
+        
+        import pyodbc
+        from airflow.models import Variable
+        
+        user = Variable.get("restaurant_DB_user")
+        password = Variable.get("SQL_Server_password")
+        host = f"restaurant_host_{number}"
+        
+        log.info(host)
+        
+        # conn_string = f"DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={host};DATABASE=RK_Central;UID={user};PWD={password};TrustServerCertificate=yes;"
+        # Дальше грузим
+        # ...
+    
     (
-        group()
+        connect.expand(number=get_restaurants())
     )
     
 yo_dag = yo_dag()
