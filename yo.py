@@ -23,10 +23,10 @@ default_args = {
 def yo_dag():
     
     @task
-    def yo(**kwargs):
-	    import logging
-    	log = logging.getLogger('airflow.task')
-	    log.info('Yo!')
+    def yo():
+        import logging
+        log = logging.getLogger('airflow.task')
+        log.info('Yo!')
         
     (
         yo()
