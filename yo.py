@@ -24,19 +24,17 @@ def yo_dag():
     
     @task
     def yo():
-        import logging
-        log = logging.getLogger('airflow.task')
-        log.info('Yo!')
-     
+        return 'Yo!'
+
     @task
-    def no():
+    def what(phrase):
         import logging
         log = logging.getLogger('airflow.task')
-        log.info('No(') 
+        log.info(phrase)
+
        
     (
-        yo()
-        >> no()
+        what(phrase=yo())
     )
     
 yo_dag = yo_dag()
