@@ -24,7 +24,7 @@ default_args = {
 def yo_dag():
     
     @task_group
-    def group()
+    def group():
     
         @task
         def yo():
